@@ -72,6 +72,10 @@
     "@directus/format-title": "^10.0.0",
     "@directus/types": "^10.1.2",
     "@directus/utils": "^10.0.6",
-    "@vue/eslint-config-typescript": "^11.0.2"
+    "@vue/eslint-config-typescript": "^11.0.2",
+    "axios": "^1.4.0",
+    "mitt": "^3.0.1",
+    "p-queue": "^7.3.4",
+    "vue-i18n": "^9.2.2"
   }
 }

@@ -1,6 +1,6 @@
-import { logout, LogoutReason, refresh } from '@/auth';
-import { useRequestsStore } from '@/stores/requests';
-import { getRootPath } from '@/utils/get-root-path';
+import { logout, LogoutReason, refresh } from './auth.ts';
+import { useRequestsStore } from './stores/requests';
+import { getRootPath } from './utils/get-root-path';
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import PQueue, { DefaultAddOptions, Options } from 'p-queue';
 import { addQueryToPath } from './utils/add-query-to-path';
