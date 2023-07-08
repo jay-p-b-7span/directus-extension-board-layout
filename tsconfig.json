@@ -1,6 +1,10 @@
 {
 	"compilerOptions": {
-		"target": "ES2019",
+		// "target": "ES2019",
+		"target": "esnext",
+		"paths" : {
+			"@/*": ["./src/*"],
+		},
 		"lib": ["ES2019", "DOM"],
 		"moduleResolution": "node",
 		"strict": true,
