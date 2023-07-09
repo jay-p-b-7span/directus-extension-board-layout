@@ -3,7 +3,8 @@
         <div class="field">
             <div class="type-label">Total</div>
             <v-select
-                v-model="totalField"
+                @update:model-value="getTotal($event)"
+                :model-value="totalField"
                 :items="props.fieldsInCollection"
                 item-value="field"
                 item-text="name"
@@ -177,6 +178,7 @@
 import type { ChangeEvent, Group, Item } from "./types";
 import Draggable from "vuedraggable";
 import { ref } from "vue";
+import { useItems } from "@directus/extensions-sdk";
 
 import { useI18n } from "vue-i18n";
 
@@ -237,6 +239,36 @@ function openEditGroup(group: Group) {
     editDialogOpen.value = group.id;
     editTitle.value = group.title;
 }
+
+const getTotal = (field) => {
+    // console.log("🚀 ~ file: kanban.vue:244 ~ getTotal ~ field:", field);
+    totalField.value = field;
+    console.log("props collection", props.collection);
+
+    const { items } = useItems("products", {
+        limit: -1,
+        fields: ["*"],
+    });
+
+    watch(
+        [items],
+        () => {
+            totalField.value = items.value.reduce((total, item) => {
+                console.log(
+                    "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
+                    item
+                );
+
+                return total + item[field];
+            }, 0);
+            console.log(
+                "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
+                totalField.value
+            );
+        },
+        { deep: true, immediate: true }
+    );
+};
 </script>
 
 <style lang="scss" scoped>
