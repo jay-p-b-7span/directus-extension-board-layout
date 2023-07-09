@@ -1,6 +1,19 @@
 <template>
+    <div>
+        <div class="field">
+            <div class="type-label">Total</div>
+            <v-select
+                v-model="totalField"
+                :items="props.fieldsInCollection"
+                item-value="field"
+                item-text="name"
+                placeholder="Select Field"
+                show-deselect
+            />
+        </div>
+    </div>
+
     <div class="kanban">
-        <h2>7Span Kanban 🎉</h2>
         <draggable
             :model-value="groupedItems"
             group="groups"
@@ -218,6 +231,7 @@ const { t } = useI18n();
 
 const editDialogOpen = ref<string | number | null>(null);
 const editTitle = ref("");
+const totalField = ref();
 
 function openEditGroup(group: Group) {
     editDialogOpen.value = group.id;

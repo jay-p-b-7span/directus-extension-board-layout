@@ -46,10 +46,10 @@
     </div>
 
     <div class="field">
-        <div class="type-label">Show Total</div>
+        <div class="type-label">Total</div>
         <v-select
-            v-model="textFieldSync"
-            :items="fieldGroups.text"
+            v-model="totalFieldSync"
+            :items="props.fieldsInCollection"
             item-value="field"
             item-text="name"
             placeholder="Select Field"
@@ -143,6 +143,7 @@ export default {
 <script setup lang="ts">
 import { useSync } from "@directus/extensions-sdk";
 import { useI18n } from "vue-i18n";
+import { ref } from "vue";
 
 const props = withDefaults(
     defineProps<{
@@ -179,6 +180,10 @@ const props = withDefaults(
 );
 console.log("🚀 ~ file: options.vue:166 ~ props:", props);
 
+// props.fieldsInCollection.filter( ( field  ) => {
+//     return field.type ==
+// });
+
 const emit = defineEmits([
     "update:imageSource",
     "update:titleField",
@@ -190,6 +195,7 @@ const emit = defineEmits([
     "update:tagsField",
     "update:userField",
     "update:showUngrouped",
+    "update:totalField",
 ]);
 
 const { t } = useI18n();
@@ -204,6 +210,7 @@ const groupTitleSync = useSync(props, "groupTitle", emit);
 const dateFieldSync = useSync(props, "dateField", emit);
 const tagsFieldSync = useSync(props, "tagsField", emit);
 const userFieldSync = useSync(props, "userField", emit);
+// const totalField = ref();
 </script>
 
 <style lang="scss" scoped>
