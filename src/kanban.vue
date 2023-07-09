@@ -177,7 +177,7 @@
 <script setup lang="ts">
 import type { ChangeEvent, Group, Item } from "./types";
 import Draggable from "vuedraggable";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useItems } from "@directus/extensions-sdk";
 
 import { useI18n } from "vue-i18n";
@@ -234,6 +234,30 @@ const { t } = useI18n();
 const editDialogOpen = ref<string | number | null>(null);
 const editTitle = ref("");
 const totalField = ref();
+const total = ref();
+
+const { items, getItems } = useItems(props.collection);
+console.log("🚀 ~ file: kanban.vue:242 ~ items:", items);
+
+getItems();
+watch(
+    [items],
+    () => {
+        total.value = items.value.reduce((total, item) => {
+            console.log(
+                "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
+                item
+            );
+
+            return total + item.price;
+        }, 0);
+        console.log(
+            "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
+            total.value
+        );
+    },
+    { deep: true, immediate: true }
+);
 
 function openEditGroup(group: Group) {
     editDialogOpen.value = group.id;
@@ -245,28 +269,41 @@ const getTotal = (field) => {
     totalField.value = field;
     console.log("props collection", props.collection);
 
-    const { items } = useItems("products", {
-        limit: -1,
-        fields: ["*"],
-    });
+    // const { items } = useItems("products", {
+    //     limit: -1,
+    //     fields: ["*"],
+    // });
 
-    watch(
-        [items],
-        () => {
-            totalField.value = items.value.reduce((total, item) => {
-                console.log(
-                    "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
-                    item
-                );
+    // watch(
+    //     [items],
+    //     () => {
+    //         totalField.value = items.value.reduce((total, item) => {
+    //             console.log(
+    //                 "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
+    //                 item
+    //             );
 
-                return total + item[field];
-            }, 0);
-            console.log(
-                "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
-                totalField.value
-            );
-        },
-        { deep: true, immediate: true }
+    //             return total + item[field];
+    //         }, 0);
+    //         console.log(
+    //             "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
+    //             totalField.value
+    //         );
+    //     },
+    //     { deep: true, immediate: true }
+    // );
+
+    total.value = items.value.reduce((total, item) => {
+        console.log(
+            "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
+            item
+        );
+
+        return total + item[field];
+    }, 0);
+    console.log(
+        "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
+        total.value
     );
 };
 </script>
