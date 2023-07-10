@@ -1,10 +1,9 @@
 <template>
     <div>
-        <div class="field" style="margin-bottom: 8px">
+        <div class="field" style="margin-bottom: 16px">
             <div class="type-label">Total</div>
             <v-select
-                @update:model-value="getTotal($event)"
-                :model-value="totalField"
+                v-model="totalField"
                 :items="props.fieldsInCollection"
                 item-value="field"
                 item-text="name"
@@ -36,7 +35,16 @@
                                         : group.title
                                 }}
                             </div>
-                            <span class="badge">{{ group.items.length }}</span>
+                            <span class="badge"> {{ group.items.length }}</span>
+
+                            <template
+                                v-if="group.id !== null && totalField !== null"
+                            >
+                                <div class="title-content">Total</div>
+                                <span class="badge">
+                                    {{ getTotal(group.id) }}</span
+                                >
+                            </template>
                         </div>
                         <div v-if="group.id !== null" class="actions">
                             <!-- <router-link :to="`${collection}/+`"><v-icon name="add" /></router-link> -->
@@ -204,6 +212,7 @@ const props = withDefaults(
         sortField?: string | null;
         userField?: string | null;
         groupsSortField?: string | null;
+        groupField: string | null;
     }>(),
     {
         collection: null,
@@ -222,6 +231,7 @@ const props = withDefaults(
 
 const { collection: collectionKey } = toRefs(props);
 console.log("🚀 ~ file: kanban.vue:224 ~ collectionKey:", collectionKey);
+console.log("props", props);
 
 const { items } = useItems(collectionKey, {
     fields: ["*"],
@@ -240,76 +250,23 @@ const { t } = useI18n();
 
 const editDialogOpen = ref<string | number | null>(null);
 const editTitle = ref("");
-const totalField = ref();
-const total = ref();
-
-// watch(
-//     [items],
-//     () => {
-//         total.value = items.value.reduce((total, item) => {
-//             console.log(
-//                 "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
-//                 item
-//             );
-
-//             return total + item.price;
-//         }, 0);
-//         console.log(
-//             "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
-//             total.value
-//         );
-//     },
-//     { deep: true, immediate: true }
-// );
+const totalField = ref(null);
+// const total = ref();
 
 function openEditGroup(group: Group) {
     editDialogOpen.value = group.id;
     editTitle.value = group.title;
 }
 
-const getTotal = (field) => {
-    // console.log("🚀 ~ file: kanban.vue:244 ~ getTotal ~ field:", field);
-    totalField.value = field;
-    console.log("props collection", props.collection);
+const getTotal = (groupFieldId) => {
+    console.log("get Total Function call ", groupFieldId);
+    const result = items.value.filter((item) => {
+        return item[props.groupField] == groupFieldId;
+    });
 
-    console.log("🚀 ~ file: kanban.vue:242 ~ items:", items);
-
-    // const { items } = useItems("products", {
-    //     limit: -1,
-    //     fields: ["*"],
-    // });
-
-    // watch(
-    //     [items],
-    //     () => {
-    //         totalField.value = items.value.reduce((total, item) => {
-    //             console.log(
-    //                 "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
-    //                 item
-    //             );
-
-    //             return total + item[field];
-    //         }, 0);
-    //         console.log(
-    //             "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
-    //             totalField.value
-    //         );
-    //     },
-    //     { deep: true, immediate: true }
-    // );
-
-    total.value = items.value.reduce((total, item) => {
-        console.log(
-            "🚀 ~ file: paginateGroup.vue:90 ~ totalPrice ~ item:",
-            item
-        );
-
-        return total + item[field];
+    return result.reduce((total, item) => {
+        return total + item[totalField.value];
     }, 0);
-    console.log(
-        "🚀 ~ file: paginateGroup.vue:95 ~ totalPrice  🎉🎉🎉🎉🎉🎉🎉🎉 ~ totalPrice:",
-        total.value
-    );
 };
 </script>
 
